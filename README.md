@@ -112,6 +112,14 @@ GPUS=4 bash bash/03_train_CURE.sh
 Run `python <script> --help` for all dataset, checkpoint, optimization, and
 resume options.
 
+## Acknowledgements
+
+CURE builds upon
+[OneRestore](https://github.com/gy65896/OneRestore), and this implementation
+was developed with substantial reference to its official codebase. We thank
+Yu Guo, Yuan Gao, Yuxu Lu, Huilin Zhu, Ryan Wen Liu, and Shengfeng He for
+making their work and code publicly available.
+
 ## Citation
 
 ```bibtex
