@@ -16,11 +16,11 @@ degradations are removed.
 
 ## Installation
 
-Python 3.10+ and a CUDA-capable PyTorch installation are recommended.
+Python 3.11 and a CUDA-capable PyTorch installation are recommended.
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
+conda create -n cure python=3.11 -y
+conda activate cure
 pip install -r requirements.txt
 ```
 
@@ -38,11 +38,18 @@ The training utilities expect the extracted data under
 `data/half_test/main_data`. Raw data and generated HDF5 files are ignored by
 Git.
 
-Build the aligned patch databases used for training:
+Build the aligned patch database used for CURE training:
+
+```bash
+python tools/prepare_h5.py cure
+```
+
+The following additional command is only needed when retraining the
+OneRestore baseline from scratch. It creates `datasets_h5/half_og_train.h5`,
+which is consumed by `bash/02_train_OneRestore_baseline.sh`:
 
 ```bash
 python tools/prepare_h5.py baseline
-python tools/prepare_h5.py cure
 ```
 
 ## Checkpoints
@@ -104,17 +111,6 @@ GPUS=4 bash bash/03_train_CURE.sh
 
 Run `python <script> --help` for all dataset, checkpoint, optimization, and
 resume options.
-
-## Project page
-
-The static site lives in `project-page/` and is deployed to GitHub Pages by
-`.github/workflows/pages.yml` whenever `main` changes. To preview it locally:
-
-```bash
-python -m http.server 8000 --directory project-page
-```
-
-Then open <http://localhost:8000>.
 
 ## Citation
 
