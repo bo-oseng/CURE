@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>CURE — Controllable Unified Image Restoration</title>
+  <meta name="title" content="CURE: Controllable Unified Image Restoration for Complex Degradations">
+  <meta name="description" content="CURE enables selective, intensity-controllable, and order-invariant restoration for images affected by complex composite degradations.">
+  <meta name="keywords" content="image restoration, controllable restoration, composite degradation, all-in-one restoration, CURE, CCDD-11, computer vision">
+  <meta name="author" content="Boseong Kim, Donghyeon Cho">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#153e35">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Hanyang University">
+  <meta property="og:title" content="CURE: Controllable Unified Image Restoration for Complex Degradations">
+  <meta property="og:description" content="Control what to restore and how much — with selective, continuous, and order-invariant image restoration.">
+  <meta property="og:url" content="https://bo-oseng.github.io/CURE/">
+  <meta property="og:image" content="https://bo-oseng.github.io/CURE/static/images/social_preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="CURE restoration intensity results from a degraded image to a restored image">
+  <meta property="article:published_time" content="2026-07-03T00:00:00.000Z">
+  <meta property="article:section" content="Computer Vision">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CURE: Controllable Unified Image Restoration">
+  <meta name="twitter:description" content="Control what to restore and how much.">
+  <meta name="twitter:image" content="https://bo-oseng.github.io/CURE/static/images/social_preview.png">
+
+  <meta name="citation_title" content="CURE: Controllable Unified Image Restoration for Complex Degradations">
+  <meta name="citation_author" content="Kim, Boseong">
+  <meta name="citation_author" content="Cho, Donghyeon">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_conference_title" content="International Conference on Pattern Recognition">
+  <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2607.03044">
+  <meta name="citation_arxiv_id" content="2607.03044">
+
+  <link rel="canonical" href="https://bo-oseng.github.io/CURE/">
+  <link rel="icon" type="image/svg+xml" href="static/images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "CURE: Controllable Unified Image Restoration for Complex Degradations",
+    "description": "A unified framework for selective, intensity-controllable, and order-invariant restoration under complex composite degradations.",
+    "author": [
+      {"@type": "Person", "name": "Boseong Kim", "affiliation": {"@type": "Organization", "name": "Hanyang University"}},
+      {"@type": "Person", "name": "Donghyeon Cho", "affiliation": {"@type": "Organization", "name": "Hanyang University"}}
+    ],
+    "datePublished": "2026-07-03",
+    "publisher": {"@type": "Organization", "name": "International Conference on Pattern Recognition"},
+    "url": "https://bo-oseng.github.io/CURE/",
+    "image": "https://bo-oseng.github.io/CURE/static/images/social_preview.png",
+    "keywords": ["image restoration", "controllable restoration", "composite degradation", "all-in-one restoration"],
+    "isAccessibleForFree": true,
+    "sameAs": "https://arxiv.org/abs/2607.03044"
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <nav class="site-nav" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a class="nav-brand" href="#top" aria-label="CURE home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        CURE
+      </a>
+      <div class="nav-links">
+        <a href="#control">Control</a>
+        <a href="#selective">Selective</a>
+        <a href="#method">Method</a>
+        <a href="#results">Results</a>
+        <a href="#supplement">Supplement</a>
+      </div>
+      <a class="nav-paper" href="https://arxiv.org/abs/2607.03044" target="_blank" rel="noopener">
+        arXiv <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <header class="hero-section" id="top">
+      <div class="hero-glow hero-glow-one" aria-hidden="true"></div>
+      <div class="hero-glow hero-glow-two" aria-hidden="true"></div>
+      <div class="page-shell hero-content">
+        <div class="venue-pill"><span></span> ICPR 2026</div>
+        <h1>
+          <span class="hero-acronym">CURE</span>
+          <span class="hero-title">Controllable Unified Image Restoration<br class="desktop-break"> for Complex Degradations</span>
+        </h1>
+        <p class="hero-tagline">Control <strong>what</strong> to restore and <strong>how much.</strong></p>
+
+        <div class="authors" aria-label="Paper authors">
+          <a href="mailto:hosky789@hanyang.ac.kr">Boseong Kim</a>
+          <span class="author-separator" aria-hidden="true">·</span>
+          <a href="mailto:doncho@hanyang.ac.kr">Donghyeon Cho<sup>†</sup></a>
+        </div>
+        <p class="affiliation">Hanyang University <span>·</span> <sup>†</sup> Corresponding author</p>
+
+        <div class="hero-actions" aria-label="Project resources">
+          <a class="resource-button resource-primary" href="static/pdfs/CURE.pdf" target="_blank">
+            <i class="fas fa-file-pdf" aria-hidden="true"></i><span>Paper</span>
+          </a>
+          <a class="resource-button" href="https://arxiv.org/abs/2607.03044" target="_blank" rel="noopener">
+            <span class="button-wordmark" aria-hidden="true">arXiv</span><span>arXiv</span>
+          </a>
+          <a class="resource-button" href="https://huggingface.co/datasets/ses7720/CCDD-11" target="_blank" rel="noopener">
+            <i class="fab fa-github" aria-hidden="true"></i><span>Code</span>
+          </a>
+          <a class="resource-button" href="https://github.com/bo-oseng/CURE" target="_blank" rel="noopener">
+            <i class="fas fa-database" aria-hidden="true"></i><span>Dataset</span>
+          </a>
+        </div>
+
+        <div class="teaser-card" aria-label="Restoration intensity teaser">
+          <div class="teaser-heading">
+            <span>Identity</span>
+            <span class="teaser-line" aria-hidden="true"></span>
+            <span>Full restoration</span>
+          </div>
+          <div class="teaser-rail">
+            <figure>
+              <img src="static/images/ratio/ratio-02.jpg" alt="Snow-degraded input with low restoration intensity">
+              <figcaption>w = 0.2</figcaption>
+            </figure>
+            <figure>
+              <img src="static/images/ratio/ratio-04.jpg" alt="Partially restored image at ratio 0.4">
+              <figcaption>w = 0.4</figcaption>
+            </figure>
+            <figure>
+              <img src="static/images/ratio/ratio-06.jpg" alt="Partially restored image at ratio 0.6">
+              <figcaption>w = 0.6</figcaption>
+            </figure>
+            <figure>
+              <img src="static/images/ratio/ratio-08.jpg" alt="Mostly restored image at ratio 0.8">
+              <figcaption>w = 0.8</figcaption>
+            </figure>
+            <figure>
+              <img src="static/images/ratio/ratio-09.jpg" alt="Strongly restored image at ratio 0.9">
+              <figcaption>w = 0.9</figcaption>
+            </figure>
+          </div>
+          <p>Continuous control over restoration intensity — without changing the network architecture.</p>
+        </div>
+      </div>
+    </header>
+
+    <section class="section-block abstract-section" id="abstract">
+      <div class="page-shell narrow-shell">
+        <div class="section-kicker">In brief</div>
+        <h2>A restoration model that listens precisely.</h2>
+        <p class="abstract-lead">
+          Composite degradations are intertwined: removing one corruption can alter another, and processing order can change the result. CURE learns disentangled and adjustable representations so a single model can preserve the input, remove selected degradations, and continuously control restoration strength.
+        </p>
+        <details class="abstract-details">
+          <summary>Read the full abstract <span aria-hidden="true">＋</span></summary>
+          <p>
+            The presence of composite degradations poses a significant challenge, since the underlying corruption factors exhibit complex and interdependent interactions. Even when the degradation types are known, accurately restoring the image remains difficult due to the intertwined nature of their effects and the need for selective control during the recovery process. To address this, we introduce CURE, a unified framework that enables controllable restoration in complex degradation settings by learning disentangled and adjustable representations. CURE is driven by four complementary objectives. First, an identity embedding is incorporated, along with a reconstruction constraint, to ensure that the model can reproduce the input image when restoration is unnecessary. Second, the ratio control mechanism blends the identity embedding with degradation-specific embeddings using user-regulated mixing ratios, allowing continuous control over restoration intensity. Third, an intermediate loss supervises stepwise outputs, each encouraged to tackle only a single degradation factor within a composite mixture. Finally, a permutation-invariant loss produces consistent restoration quality regardless of the order in which multiple degradations are addressed.
+          </p>
+        </details>
+
+        <div class="contribution-grid">
+          <article class="contribution-card">
+            <span class="card-number">01</span>
+            <h3>Preserve</h3>
+            <p>An identity embedding explicitly tells the model when no restoration is needed.</p>
+          </article>
+          <article class="contribution-card">
+            <span class="card-number">02</span>
+            <h3>Control</h3>
+            <p>A ratio-controlled embedding continuously adjusts how strongly a degradation is removed.</p>
+          </article>
+          <article class="contribution-card">
+            <span class="card-number">03</span>
+            <h3>Disentangle</h3>
+            <p>Intermediate supervision isolates individual corruptions inside complex mixtures.</p>
+          </article>
+          <article class="contribution-card">
+            <span class="card-number">04</span>
+            <h3>Reorder</h3>
+            <p>Permutation-invariant learning keeps outputs consistent across restoration sequences.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block control-section" id="control">
+      <div class="page-shell">
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker"><span>01</span> Intensity control</div>
+            <h2>Dial restoration up or down.</h2>
+          </div>
+          <p>Move the slider to inspect the exact ratio-controlled outputs shown in the paper.</p>
+        </div>
+
+        <div class="interactive-panel ratio-panel">
+          <div class="ratio-visual">
+            <img id="ratio-image" src="static/images/ratio/ratio-05.jpg" alt="Snow restoration result at intensity ratio 0.5">
+            <div class="image-badge">Snow example</div>
+            <div class="ratio-readout" aria-live="polite">
+              <span>Restoration ratio</span>
+              <strong id="ratio-value">w = 0.5</strong>
+            </div>
+          </div>
+          <div class="ratio-controls">
+            <div class="control-copy">
+              <span class="control-eyebrow">Live paper result</span>
+              <h3 id="ratio-state">Partial restoration</h3>
+              <p id="ratio-description">The model removes part of the target degradation while retaining a controlled amount.</p>
+            </div>
+            <label class="sr-only" for="ratio-slider">Restoration intensity ratio</label>
+            <input id="ratio-slider" class="ratio-slider" type="range" min="2" max="9" value="5" step="1" aria-valuemin="0.2" aria-valuemax="0.9" aria-valuenow="0.5">
+            <div class="slider-labels" aria-hidden="true">
+              <span><b>0.2</b> Preserve more</span>
+              <span><b>0.9</b> Restore more</span>
+            </div>
+            <div class="control-note">
+              <i class="fas fa-info-circle" aria-hidden="true"></i>
+              The interactive range uses the eight outputs visualized in Figure 3(a). In the formulation, <i>w</i> = 0 is identity and <i>w</i> = 1 is full restoration.
+            </div>
+          </div>
+        </div>
+        <button class="supp-jump" type="button" data-supp-jump="ratio" data-supp-figure="7">
+          <span><i class="fas fa-images" aria-hidden="true"></i> More ratio-control trajectories</span>
+          <strong>Supplementary Figures 7–9 <i class="fas fa-arrow-right" aria-hidden="true"></i></strong>
+        </button>
+      </div>
+    </section>
+
+    <section class="section-block selective-section" id="selective">
+      <div class="page-shell">
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker"><span>02</span> Selective restoration</div>
+            <h2>Remove one. Preserve the rest.</h2>
+          </div>
+          <p>CURE isolates a requested corruption instead of blindly clearing the entire image.</p>
+        </div>
+
+        <div class="example-switcher" role="group" aria-label="Selective restoration examples">
+          <button class="example-button is-active" type="button" data-selective-example="low-snow" aria-pressed="true">Low + Snow</button>
+          <button class="example-button" type="button" data-selective-example="haze-rain" aria-pressed="false">Haze + Rain</button>
+        </div>
+
+        <div class="task-summary" aria-live="polite">
+          <div class="task-flow">
+            <span class="task-chip task-input" id="selective-input-chip">Low + Snow</span>
+            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+            <span class="task-chip task-remove" id="selective-remove-chip"><i class="fas fa-minus"></i> Remove Low-light</span>
+            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+            <span class="task-chip task-preserve" id="selective-preserve-chip"><i class="fas fa-shield-alt"></i> Preserve Snow</span>
+          </div>
+          <p id="selective-summary">Selective low-light enhancement should retain the snow component.</p>
+        </div>
+
+        <div class="result-grid selective-grid">
+          <figure class="result-card">
+            <div class="result-label">Composite input</div>
+            <img id="selective-input" src="static/images/selective/low-snow-input.jpg" alt="Input image affected by low light and snow">
+          </figure>
+          <figure class="result-card baseline-card">
+            <div class="result-label">OneRestore</div>
+            <img id="selective-baseline" src="static/images/selective/low-snow-onerestore.jpg" alt="OneRestore selective restoration result">
+          </figure>
+          <figure class="result-card cure-card">
+            <div class="result-label"><span class="mini-mark"></span> CURE</div>
+            <img id="selective-cure" src="static/images/selective/low-snow-cure.jpg" alt="CURE selective restoration result">
+          </figure>
+          <figure class="result-card target-card">
+            <div class="result-label">Target</div>
+            <img id="selective-target" src="static/images/selective/low-snow-target.jpg" alt="Ground-truth target retaining snow">
+          </figure>
+        </div>
+        <button class="supp-jump" type="button" data-supp-jump="selective" data-supp-figure="10">
+          <span><i class="fas fa-images" aria-hidden="true"></i> More selective-restoration cases</span>
+          <strong>Supplementary Figures 10–13 <i class="fas fa-arrow-right" aria-hidden="true"></i></strong>
+        </button>
+      </div>
+    </section>
+
+    <section class="section-block order-section" id="order">
+      <div class="page-shell">
+        <div class="section-heading light-heading">
+          <div>
+            <div class="section-kicker"><span>03</span> Order invariance</div>
+            <h2>Same goal. Either order.</h2>
+          </div>
+          <p>Sequential restoration should not depend on which degradation is removed first.</p>
+        </div>
+
+        <div class="order-toolbar">
+          <div class="method-toggle" role="group" aria-label="Method comparison">
+            <button type="button" data-order-method="onerestore" aria-pressed="false">OneRestore</button>
+            <button class="is-active" type="button" data-order-method="cure" aria-pressed="true">CURE</button>
+          </div>
+          <div class="order-metric">
+            <span id="order-metric-value">0.02 dB</span>
+            <small id="order-metric-label">average gap between restoration orders</small>
+          </div>
+        </div>
+
+        <div class="order-comparison">
+          <figure class="order-input-card">
+            <div class="order-label">Input · Low + Snow</div>
+            <img src="static/images/order/input.jpg" alt="Input image degraded by low light and snow">
+          </figure>
+          <div class="order-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></div>
+          <figure>
+            <div class="order-label">Delow <span>→</span> Desnow</div>
+            <img id="order-first" src="static/images/order/cure-low-snow.jpg" alt="CURE result after low-light enhancement followed by desnowing">
+          </figure>
+          <div class="order-versus">vs.</div>
+          <figure>
+            <div class="order-label">Desnow <span>→</span> Delow</div>
+            <img id="order-second" src="static/images/order/cure-snow-low.jpg" alt="CURE result after desnowing followed by low-light enhancement">
+          </figure>
+          <figure class="order-target-card">
+            <div class="order-label">Ground truth</div>
+            <img src="static/images/order/ground-truth.jpg" alt="Clean ground-truth image">
+          </figure>
+        </div>
+        <p class="order-caption" id="order-caption">CURE produces closely aligned outputs across both processing orders.</p>
+        <button class="supp-jump supp-jump-dark" type="button" data-supp-jump="order" data-supp-figure="14">
+          <span><i class="fas fa-images" aria-hidden="true"></i> Inspect one- and two-stage order studies</span>
+          <strong>Supplementary Figures 14–16 <i class="fas fa-arrow-right" aria-hidden="true"></i></strong>
+        </button>
+      </div>
+    </section>
+
+    <section class="section-block method-section" id="method">
+      <div class="page-shell">
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker"><span>04</span> Method</div>
+            <h2>Controllability learned through four objectives.</h2>
+          </div>
+          <p>CURE changes the training strategy, not the underlying restoration architecture.</p>
+        </div>
+
+        <figure class="method-figure">
+          <img src="static/images/method/overview-05.jpg" alt="CURE overview showing embedding generation, identity loss, and the overall training pipeline" loading="lazy">
+          <figcaption>Overview of CURE. Degradation and identity embeddings guide disentangled, controllable restoration.</figcaption>
+        </figure>
+
+        <div class="method-grid">
+          <article>
+            <span class="method-icon method-blue"><i class="fas fa-equals"></i></span>
+            <h3>Identity embedding</h3>
+            <p>Constrains the model to reproduce the input when restoration is unnecessary.</p>
+          </article>
+          <article>
+            <span class="method-icon method-green"><i class="fas fa-sliders-h"></i></span>
+            <h3>Ratio-control loss</h3>
+            <p>Interpolates identity and degradation embeddings for continuous intensity control.</p>
+          </article>
+          <article>
+            <span class="method-icon method-purple"><i class="fas fa-layer-group"></i></span>
+            <h3>Intermediate loss</h3>
+            <p>Supervises partial outputs so each step removes only the requested degradation.</p>
+          </article>
+          <article>
+            <span class="method-icon method-coral"><i class="fas fa-random"></i></span>
+            <h3>Permutation-invariant loss</h3>
+            <p>Aligns outputs from reversed restoration sequences for consistent behavior.</p>
+          </article>
+        </div>
+        <button class="supp-jump" type="button" data-supp-jump="identity" data-supp-figure="5">
+          <span><i class="fas fa-equals" aria-hidden="true"></i> Verify identity preservation</span>
+          <strong>Supplementary Figures 5–6 <i class="fas fa-arrow-right" aria-hidden="true"></i></strong>
+        </button>
+      </div>
+    </section>
+
+    <section class="section-block results-section" id="results">
+      <div class="page-shell">
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker"><span>05</span> Results</div>
+            <h2>Qualitative comparisons on CCDD-11.</h2>
+          </div>
+          <p>Figure 2 compares CURE with Restormer, NAFNet, PromptIR, and OneRestore across four complex degradation settings.</p>
+        </div>
+
+        <figure class="paper-result-figure">
+          <img src="static/images/results/figure-02.jpg" alt="Figure 2 qualitative comparison on CCDD-11 showing input, Restormer, NAFNet, PromptIR, OneRestore, CURE, and ground truth outputs" loading="lazy">
+          <figcaption>
+            <strong>Figure 2.</strong> Qualitative comparisons on the CCDD-11 dataset. From top to bottom: snow, low + haze + snow, rain, and low + haze + rain.
+          </figcaption>
+        </figure>
+
+        <div class="result-metrics-heading">
+          <span>Key quantitative results</span>
+          <p>CURE with the OneRestore backbone on CCDD-11.</p>
+        </div>
+        <div class="metrics-grid result-metrics" aria-label="Key quantitative results">
+          <article>
+            <span class="metric-value">28.28</span>
+            <span class="metric-unit">dB</span>
+            <p>Average PSNR on CCDD-11</p>
+          </article>
+          <article>
+            <span class="metric-value">93.44</span>
+            <span class="metric-unit">%</span>
+            <p>Selective restoration accuracy</p>
+          </article>
+          <article>
+            <span class="metric-value">5.98</span>
+            <span class="metric-unit">M</span>
+            <p>Parameters</p>
+          </article>
+          <article>
+            <span class="metric-value">0.02</span>
+            <span class="metric-unit">dB</span>
+            <p>Average gap between restoration orders</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block supplement-section" id="supplement">
+      <div class="page-shell">
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker"><span>06</span> Supplementary evidence</div>
+            <h2>Every control, under a closer lens.</h2>
+          </div>
+          <p>Explore fifteen supplementary figures by experiment family. Open any figure for a full-resolution inspection.</p>
+        </div>
+
+        <div class="supp-category-tabs" role="tablist" aria-label="Supplementary experiment categories">
+          <button class="is-active" type="button" role="tab" data-supp-category="identity" aria-selected="true">
+            <span>01</span><strong>Identity preservation</strong><small>Figures 5–6</small>
+          </button>
+          <button type="button" role="tab" data-supp-category="ratio" aria-selected="false">
+            <span>02</span><strong>Ratio control</strong><small>Figures 7–9</small>
+          </button>
+          <button type="button" role="tab" data-supp-category="selective" aria-selected="false">
+            <span>03</span><strong>Selective control</strong><small>Figures 10–13</small>
+          </button>
+          <button type="button" role="tab" data-supp-category="order" aria-selected="false">
+            <span>04</span><strong>Order dependency</strong><small>Figures 14–16</small>
+          </button>
+          <button type="button" role="tab" data-supp-category="quality" aria-selected="false">
+            <span>05</span><strong>Restoration quality</strong><small>Figures 17–19</small>
+          </button>
+        </div>
+
+        <div class="supp-explorer">
+          <aside class="supp-info" aria-live="polite">
+            <div class="supp-meta-row">
+              <span id="supp-category-label">Identity preservation</span>
+              <span id="supp-counter">1 / 2</span>
+            </div>
+            <span class="supp-figure-number" id="supp-figure-number">Supplementary Figure 5</span>
+            <h3 id="supp-title">Identity operation on snow</h3>
+            <p id="supp-caption">When snow is meant to remain, the identity embedding preserves the degraded input instead of over-restoring it.</p>
+            <div class="supp-tags" id="supp-tags">
+              <span>Identity embedding</span><span>Snow preservation</span>
+            </div>
+            <div class="supp-actions">
+              <div class="supp-stepper" aria-label="Navigate figures">
+                <button id="supp-prev" type="button" aria-label="Previous supplementary figure"><i class="fas fa-arrow-left" aria-hidden="true"></i></button>
+                <button id="supp-next" type="button" aria-label="Next supplementary figure"><i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+              </div>
+              <button class="supp-open" id="supp-open" type="button"><i class="fas fa-expand-alt" aria-hidden="true"></i> Full-size</button>
+            </div>
+          </aside>
+
+          <figure class="supp-stage">
+            <button class="supp-image-button" id="supp-image-button" type="button" aria-label="Open current supplementary figure full-size">
+              <img id="supp-main-image" src="static/images/supplement/figure-05.jpg" alt="Supplementary identity-operation study on snow images">
+              <span><i class="fas fa-search-plus" aria-hidden="true"></i></span>
+            </button>
+            <figcaption>Click the figure to inspect it at full resolution.</figcaption>
+          </figure>
+        </div>
+
+        <div class="supp-filmstrip" id="supp-filmstrip" aria-label="Figures in the selected category"></div>
+        <p class="supp-source-note">Figures 5–19 from the paper supplementary material, grouped and loaded by experiment family.</p>
+      </div>
+    </section>
+
+    <section class="section-block dataset-section" id="dataset">
+      <div class="page-shell dataset-grid">
+        <div>
+          <div class="section-kicker"><span>07</span> Dataset</div>
+          <h2>CCDD-11</h2>
+          <p>
+            CDD-11 was originally introduced with OneRestore. CCDD-11 follows its composite-degradation synthesis pipeline, then adds supervision pairs for removing each degradation factor individually. For example, a Low + Haze input is paired with a Haze-only target when removing Low and a Low-only target when removing Haze—enabling selective, partial restoration rather than only full recovery.
+          </p>
+          <a class="text-link" href="https://huggingface.co/datasets/ses7720/CCDD-11" target="_blank" rel="noopener">Download CCDD-11 on Hugging Face <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="dataset-visual dataset-extension" aria-label="CCDD-11 extends the CDD-11 pipeline with individual degradation-removal targets">
+          <div class="dataset-origin">
+            <span>Original composite pipeline</span>
+            <strong>CDD-11 <small>by OneRestore</small></strong>
+          </div>
+          <div class="dataset-extension-arrow">
+            <i class="fas fa-arrow-down" aria-hidden="true"></i>
+            <span>Add factor-level target pairs</span>
+          </div>
+          <div class="dataset-example-input">
+            <small>Composite input</small>
+            <div>
+              <span class="degradation-pill low"><i class="fas fa-moon"></i> Low-light</span>
+              <b>+</b>
+              <span class="degradation-pill haze"><i class="fas fa-smog"></i> Haze</span>
+            </div>
+          </div>
+          <div class="dataset-targets">
+            <article>
+              <span>Remove Low-light</span>
+              <i class="fas fa-arrow-right" aria-hidden="true"></i>
+              <strong>Haze remains</strong>
+            </article>
+            <article>
+              <span>Remove Haze</span>
+              <i class="fas fa-arrow-right" aria-hidden="true"></i>
+              <strong>Low-light remains</strong>
+            </article>
+          </div>
+          <div class="dataset-caption">CCDD-11 · supervision for selective restoration</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block citation-section" id="citation">
+      <div class="page-shell narrow-shell">
+        <div class="section-kicker">Citation</div>
+        <h2>If CURE helps your research, please cite:</h2>
+        <div class="bibtex-box">
+          <button id="copy-bibtex" type="button" aria-label="Copy BibTeX citation">
+            <i class="far fa-copy" aria-hidden="true"></i><span>Copy</span>
+          </button>
+          <pre id="bibtex-code"><code>@inproceedings{kim2026cure,
+  title     = {CURE: Controllable Unified Image Restoration for Complex Degradations},
+  author    = {Kim, Boseong and Cho, Donghyeon},
+  booktitle = {International Conference on Pattern Recognition (ICPR)},
+  year      = {2026}
+}</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="supp-lightbox" id="supp-lightbox" hidden role="dialog" aria-modal="true" aria-labelledby="supp-lightbox-title">
+    <button class="supp-lightbox-backdrop" type="button" data-lightbox-close aria-label="Close full-size figure"></button>
+    <div class="supp-lightbox-dialog">
+      <header>
+        <div>
+          <span id="supp-lightbox-number">Supplementary Figure 5</span>
+          <h3 id="supp-lightbox-title">Identity operation on snow</h3>
+        </div>
+        <button class="supp-lightbox-close" id="supp-lightbox-close" type="button" aria-label="Close full-size figure"><i class="fas fa-times" aria-hidden="true"></i></button>
+      </header>
+      <div class="supp-lightbox-scroll">
+        <img id="supp-lightbox-image" src="static/images/supplement/figure-05.jpg" alt="Supplementary identity-operation study on snow images">
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="page-shell footer-inner">
+      <div>
+        <a class="nav-brand footer-brand" href="#top"><span class="brand-mark"></span> CURE</a>
+        <p>Controllable Unified Image Restoration for Complex Degradations</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://arxiv.org/abs/2607.03044" target="_blank" rel="noopener">arXiv</a>
+        <a href="https://github.com/bo-oseng/CURE" target="_blank" rel="noopener">GitHub</a>
+        <a href="mailto:hosky789@hanyang.ac.kr">Contact</a>
+      </div>
+      <p class="template-credit">Built from the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank" rel="noopener">Academic Project Page Template</a>.</p>
+    </div>
+  </footer>
+</body>
+</html>

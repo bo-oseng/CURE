@@ -1,0 +1,29 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+
+# Large local-only assets.
+/data
+/checkpoints/*
+!/checkpoints/CCDD_half_train/
+!/checkpoints/042_train_half_og_ccdd/
+!/checkpoints/049_1_train_side_consitency_one_identity_half_onestage/
+/datasets_h5/*
+!/datasets_h5/.gitkeep
+/outputs/*
+!/outputs/.gitkeep
+
+# Training logs and generated artifacts.
+/runs/
+/tensorboard/
+*.h5
+*.hdf5
+*.tar
+*.pth
+*.pt
+
+# Model checkpoints stay out of Git history; publish them as release assets or
+# in a dedicated model repository instead.
+/checkpoints/
