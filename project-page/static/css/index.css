@@ -2048,6 +2048,16 @@ tbody tr:last-child td {
   font-size: 0.8rem;
 }
 
+.dataset-targets .strength-target {
+  grid-column: 1 / -1;
+  border-color: rgba(128, 108, 194, 0.28);
+  background: linear-gradient(135deg, #f8f5ff, #f4f9f4);
+}
+
+.dataset-targets .strength-target > svg {
+  color: #806cc2;
+}
+
 .dataset-extension .dataset-caption {
   grid-column: 1 / -1;
   margin: 0;

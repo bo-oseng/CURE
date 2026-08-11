@@ -499,18 +499,18 @@
           <div class="section-kicker"><span>07</span> Dataset</div>
           <h2>CCDD-11</h2>
           <p>
-            CDD-11 was originally introduced with OneRestore. CCDD-11 follows its composite-degradation synthesis pipeline, then adds supervision pairs for removing each degradation factor individually. For example, a Low + Haze input is paired with a Haze-only target when removing Low and a Low-only target when removing Haze—enabling selective, partial restoration rather than only full recovery.
+            CDD-11 was originally introduced with OneRestore. CCDD-11 follows its composite-degradation synthesis pipeline, then adds supervision pairs for removing each degradation factor individually. For example, a Low + Haze input is paired with a Haze-only target when removing Low and a Low-only target when removing Haze. It also provides a half-restored target at approximately 50% restoration strength for every degradation—enabling both selective restoration and continuous intensity control rather than only full recovery.
           </p>
           <a class="text-link" href="https://huggingface.co/datasets/ses7720/CCDD-11" target="_blank" rel="noopener">Download CCDD-11 on Hugging Face <span aria-hidden="true">↗</span></a>
         </div>
-        <div class="dataset-visual dataset-extension" aria-label="CCDD-11 extends the CDD-11 pipeline with individual degradation-removal targets">
+        <div class="dataset-visual dataset-extension" aria-label="CCDD-11 extends the CDD-11 pipeline with individual degradation-removal and half-restoration targets">
           <div class="dataset-origin">
             <span>Original composite pipeline</span>
             <strong>CDD-11 <small>by OneRestore</small></strong>
           </div>
           <div class="dataset-extension-arrow">
             <i class="fas fa-arrow-down" aria-hidden="true"></i>
-            <span>Add factor-level target pairs</span>
+            <span>Add factor-level and half-restoration targets</span>
           </div>
           <div class="dataset-example-input">
             <small>Composite input</small>
@@ -531,8 +531,13 @@
               <i class="fas fa-arrow-right" aria-hidden="true"></i>
               <strong>Low-light remains</strong>
             </article>
+            <article class="strength-target">
+              <span>Half restoration</span>
+              <i class="fas fa-adjust" aria-hidden="true"></i>
+              <strong>≈ 50% restored target</strong>
+            </article>
           </div>
-          <div class="dataset-caption">CCDD-11 · supervision for selective restoration</div>
+          <div class="dataset-caption">CCDD-11 · supervision for selective and strength-controlled restoration</div>
         </div>
       </div>
     </section>
