@@ -6,6 +6,7 @@ Complex Degradations** (ICPR 2026).
 [[Project page](https://bo-oseng.github.io/CURE/)]
 [[Paper](https://arxiv.org/abs/2607.03044)]
 [[CCDD-11 dataset](https://huggingface.co/datasets/ses7720/CCDD-11)]
+[[Pretrained models](https://huggingface.co/ses7720/CURE)]
 
 ![CURE overview](project-page/static/images/method/overview-05.jpg)
 
@@ -43,6 +44,31 @@ Build the aligned patch databases used for training:
 python tools/prepare_h5.py baseline
 python tools/prepare_h5.py cure
 ```
+
+## Checkpoints
+
+Download the released checkpoints from the
+[CURE model repository on Hugging Face](https://huggingface.co/ses7720/CURE):
+
+```bash
+pip install -U huggingface_hub
+hf download ses7720/CURE \
+  CURE_restorer.tar \
+  OneRestore_embedder.tar \
+  OneRestore_restorer.tar \
+  --local-dir checkpoints
+```
+
+| File | Usage |
+| --- | --- |
+| `CURE_restorer.tar` | CURE inference and evaluation |
+| `OneRestore_embedder.tar` | Prompt encoder used for inference and training |
+| `OneRestore_restorer.tar` | Pretrained OneRestore baseline and CURE training initialization |
+
+The same files are also available from this
+[Google Drive mirror](https://drive.google.com/drive/folders/1xUXAgRPXZjntPR4m4BCh8Tyw2BXGhqSE?usp=sharing).
+Hugging Face is the recommended source because it provides versioned model
+hosting and more reliable command-line downloads.
 
 ## Inference
 
