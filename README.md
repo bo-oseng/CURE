@@ -4,6 +4,7 @@ Official implementation of **CURE: Controllable Unified Image Restoration for
 Complex Degradations** (ICPR 2026).
 
 [[Project page](https://bo-oseng.github.io/CURE/)]
+[[Live demo](https://huggingface.co/spaces/ses7720/CURE-Demo)]
 [[Paper](https://arxiv.org/abs/2607.03044)]
 [[CCDD-11 dataset](https://huggingface.co/datasets/ses7720/CCDD-11)]
 [[Pretrained models](https://huggingface.co/ses7720/CURE)]
