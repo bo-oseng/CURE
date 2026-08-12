@@ -109,9 +109,22 @@ The helper uploads only `app.py`, the required `cure` inference modules, and
 the files under `hf_space/`. It does not upload the local `checkpoints/`,
 dataset, training code, or project-page assets. The Space metadata preloads
 `CURE_restorer.tar` and `OneRestore_embedder.tar` from the public model
-repository. After publishing, select a GPU in the Space **Settings > Hardware**
-page; `T4 small` is the suggested starting point. Merely declaring
-`suggested_hardware` in the Space README does not allocate a GPU.
+repository. The deployment helper requests ZeroGPU by default, and the five
+inference functions request a GPU only while they are running. A free personal
+account must be in good standing and have an available ZeroGPU Space slot.
+
+Regular CPU Gradio Space creation now requires a paid Hugging Face plan. PRO,
+Team, or Enterprise users can choose it explicitly:
+
+```bash
+python tools/deploy_space.py \
+  --repo-id ses7720/CURE-Demo \
+  --hardware cpu-basic
+```
+
+A dedicated GPU can be selected later in the Space **Settings > Hardware**
+page. Dedicated hardware is billed while starting or running, so configure a
+sleep time or pause the Space when it is not needed.
 
 ## Inference
 

@@ -31,6 +31,14 @@ def test_two_stage_orders_cover_both_directions() -> None:
     assert app._order_choices("low_haze") == ("low → haze", "haze → low")
 
 
+def test_zerogpu_decorator_is_a_noop_outside_spaces() -> None:
+    def function() -> str:
+        return "ok"
+
+    if app.hf_spaces is None:
+        assert app.zerogpu(60)(function) is function
+
+
 def test_image_preparation_limits_the_longest_side() -> None:
     image = Image.new("RGB", (app.MAX_IMAGE_SIDE * 2, app.MAX_IMAGE_SIDE), "white")
     tensor, message = app._prepare_image(image, app.torch.device("cpu"))

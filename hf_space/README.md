@@ -6,8 +6,7 @@ colorTo: indigo
 sdk: gradio
 sdk_version: 5.38.0
 app_file: app.py
-python_version: "3.11"
-suggested_hardware: t4-small
+python_version: "3.10"
 models:
   - ses7720/CURE
 tags:

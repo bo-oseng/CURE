@@ -8,6 +8,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from huggingface_hub import CommitOperationAdd, HfApi
+from huggingface_hub.errors import HfHubHTTPError
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -33,6 +34,15 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument("--private", action="store_true", help="Create a private Space")
     parser.add_argument(
+        "--hardware",
+        choices=("zero-a10g", "cpu-basic"),
+        default="zero-a10g",
+        help=(
+            "Initial hardware. zero-a10g uses the free-account ZeroGPU exception; "
+            "cpu-basic creation requires a paid Hugging Face plan (default: zero-a10g)"
+        ),
+    )
+    parser.add_argument(
         "--commit-message",
         default="Update CURE Gradio demo",
         help="Commit message used on the Space repository",
@@ -53,13 +63,25 @@ def deployment_operations() -> list[CommitOperationAdd]:
 def main() -> None:
     args = parse_args()
     api = HfApi()
-    api.create_repo(
-        repo_id=args.repo_id,
-        repo_type="space",
-        space_sdk="gradio",
-        private=args.private,
-        exist_ok=True,
-    )
+    try:
+        api.create_repo(
+            repo_id=args.repo_id,
+            repo_type="space",
+            space_sdk="gradio",
+            space_hardware=args.hardware,
+            private=args.private,
+            exist_ok=True,
+        )
+    except HfHubHTTPError as error:
+        if error.response is not None and error.response.status_code == 402:
+            raise SystemExit(
+                "Hugging Face rejected Space creation because this account/namespace is not "
+                f"eligible for {args.hardware!r}. The default free path requires a personal "
+                "account in good standing with an available ZeroGPU Space slot. Otherwise, "
+                "subscribe to PRO (or use a paid organization) and retry with "
+                "--hardware cpu-basic."
+            ) from error
+        raise
     commit = api.create_commit(
         repo_id=args.repo_id,
         repo_type="space",

@@ -21,6 +21,11 @@ from cure.constants import EMBEDDER_TYPES
 from cure.embeddings import PromptEncoder
 from cure.models import OneRestore
 
+try:
+    import spaces as hf_spaces
+except ImportError:  # The package is injected by the ZeroGPU runtime on Spaces.
+    hf_spaces = None
+
 
 MODEL_REPO = os.environ.get("CURE_MODEL_REPO", "ses7720/CURE")
 MODEL_REVISION = os.environ.get("CURE_MODEL_REVISION", "main")
@@ -32,6 +37,14 @@ COMPOSITE_PROMPTS = tuple(name for name in RESTORATION_PROMPTS if "_" in name)
 TWO_FACTOR_PROMPTS = tuple(name for name in COMPOSITE_PROMPTS if len(name.split("_")) == 2)
 RATIO_STRENGTHS = tuple(f"{value / 10:.1f}" for value in range(11))
 INFERENCE_LOCK = threading.Lock()
+
+
+def zerogpu(duration: int):
+    """Use a ZeroGPU allocation on Spaces and remain a no-op for local runs."""
+
+    if hf_spaces is None:
+        return lambda function: function
+    return hf_spaces.GPU(duration=duration)
 
 
 @dataclass(frozen=True)
@@ -127,6 +140,7 @@ def _status(runtime: Runtime, size_message: str, operation: str) -> str:
     return f"{operation} 완료 · {size_message} · device={runtime.device}"
 
 
+@zerogpu(duration=60)
 def run_main(image: Image.Image | None, prompt: str) -> tuple[Image.Image, str]:
     runtime = get_runtime()
     tensor, size_message = _prepare_image(image, runtime.device)
@@ -135,6 +149,7 @@ def run_main(image: Image.Image | None, prompt: str) -> tuple[Image.Image, str]:
     return _to_pil(restored), _status(runtime, size_message, f"{prompt} 전체 복원")
 
 
+@zerogpu(duration=180)
 def run_ratio(
     image: Image.Image | None,
     prompt: str,
@@ -181,6 +196,7 @@ def selective_factor_update(source_prompt: str) -> dict:
     return gr.update(choices=factors, value=[factors[-1]])
 
 
+@zerogpu(duration=60)
 def run_selective(
     image: Image.Image | None,
     source_prompt: str,
@@ -196,6 +212,7 @@ def run_selective(
     )
 
 
+@zerogpu(duration=60)
 def run_identity(image: Image.Image | None) -> tuple[Image.Image, str]:
     runtime = get_runtime()
     tensor, size_message = _prepare_image(image, runtime.device)
@@ -214,6 +231,7 @@ def two_stage_order_update(source_prompt: str) -> dict:
     return gr.update(choices=choices, value=choices[0])
 
 
+@zerogpu(duration=120)
 def run_twostage(
     image: Image.Image | None,
     source_prompt: str,
