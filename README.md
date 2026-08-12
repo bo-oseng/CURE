@@ -16,11 +16,14 @@ degradations are removed.
 
 ## Installation
 
-Python 3.11 and a CUDA-capable PyTorch installation are recommended.
+Python 3.11 and the CUDA 12.8 build of PyTorch are recommended. Create the
+environment, install PyTorch first, and then install the remaining project
+dependencies:
 
 ```bash
 conda create -n cure python=3.11 -y
 conda activate cure
+pip install torch==2.11.0 torchvision==0.26.0 torchaudio==2.11.0 --index-url https://download.pytorch.org/whl/cu128
 pip install -r requirements.txt
 ```
 
@@ -80,24 +83,186 @@ hosting and more reliable command-line downloads.
 ## Inference
 
 Place the CURE restorer and OneRestore embedder weights in `checkpoints/` as
-`CURE_restorer.tar` and `OneRestore_embedder.tar`, then run either a composite
-prompt or an ordered sequence:
+`CURE_restorer.tar` and `OneRestore_embedder.tar`.
 
-```bash
-python inference.py \
-  --input examples/input.png \
-  --output outputs/restored.png \
-  --prompt low_haze \
-  --strength 1.0
+### Inference commands
 
-python inference.py \
-  --input examples/input.png \
-  --output outputs/sequential.png \
-  --sequence low haze
+Run the commands below from the repository root. They use these files by
+default:
+
+```text
+checkpoints/CURE_restorer.tar
+checkpoints/OneRestore_embedder.tar
+data/half_test/main_data/<degradation>
 ```
 
-Use `--checkpoint` and `--embedder-checkpoint` to override the default weight
-paths.
+Pass `--checkpoint checkpoints/OneRestore_restorer.tar` to run the pretrained
+OneRestore baseline instead of CURE. Use `--device cuda:1` to select a GPU or
+`--device cpu` to force CPU inference. All commands accept common image formats
+such as PNG, JPEG, BMP, TIFF, and WebP.
+
+| Script | Purpose |
+| --- | --- |
+| `demo.py` | Quickly process any image/folder and create before/after comparisons |
+| `inference_main.py` | Remove the complete degradation with one full-strength pass |
+| `inference_ratio_control.py` | Compare multiple restoration strengths |
+| `inference_selective_control.py` | Remove only selected factors from a composite degradation |
+| `inference_identity.py` | Test the learned identity/no-restoration condition |
+| `inference_twostage.py` | Remove two factors sequentially in a chosen order |
+
+#### Quick demo: `demo.py`
+
+Use this command for an arbitrary image or directory that is not arranged like
+the CCDD-11 test dataset. It applies one prompt at the selected strength and
+saves both restored images and side-by-side input/output comparisons.
+
+```bash
+python demo.py \
+  --input path/to/image_or_folder \
+  --prompt low_haze \
+  --strength 0.8 \
+  --output outputs/demo
+```
+
+`--input` is required. A directory is searched recursively. `--strength` ranges
+from `0` (identity/no restoration) to `1` (full prompt strength) and defaults to
+`1`. The output layout is:
+
+```text
+outputs/demo/
+├── restored/                  # restored images
+└── comparison/                # input | restored, saved side by side
+```
+
+#### Full one-step restoration: `inference_main.py`
+
+Use this command to remove one degradation or an entire composite degradation
+in a single full-strength pass. For example, `--prompt low_haze` requests that
+both low light and haze be removed together.
+
+```bash
+python inference_main.py \
+  --prompt low_haze \
+  --output outputs/main/low_haze
+```
+
+When `--input` is omitted, the command reads
+`data/half_test/main_data/low_haze`. To process a particular image or folder,
+provide it explicitly:
+
+```bash
+python inference_main.py \
+  --input path/to/input.png \
+  --prompt low_haze \
+  --output outputs/main/restored.png
+```
+
+#### Ratio-controlled restoration: `inference_ratio_control.py`
+
+Use this command to evaluate how the output changes as the prompt embedding is
+interpolated between identity and full restoration. Each strength is processed
+independently from the original input.
+
+```bash
+python inference_ratio_control.py \
+  --prompt low_haze \
+  --strengths 0 0.2 0.4 0.6 0.8 1 \
+  --output outputs/ratio/low_haze
+```
+
+When `--strengths` is omitted, the default sweep is `0.0, 0.1, ..., 1.0`.
+Strength `0` uses the identity embedding and strength `1` uses the complete
+prompt embedding. Results are separated by strength:
+
+```text
+outputs/ratio/low_haze/
+├── strength_0/
+├── strength_0.2/
+├── strength_0.4/
+├── strength_0.6/
+├── strength_0.8/
+└── strength_1/
+```
+
+If `--input` is omitted, the input defaults to
+`data/half_test/main_data/<prompt>`.
+
+#### Selective restoration: `inference_selective_control.py`
+
+Use this command to remove only part of a composite degradation. The source
+prompt describes what is present in the image, while `--remove` specifies what
+the model should remove. The following example removes haze from `low_haze`
+images while leaving the low-light condition:
+
+```bash
+python inference_selective_control.py \
+  --source-prompt low_haze \
+  --remove haze \
+  --output outputs/selective/low_haze_dehaze
+```
+
+Multiple factors can be selected when the corresponding composite embedding
+exists. For example:
+
+```bash
+python inference_selective_control.py \
+  --source-prompt low_haze_rain \
+  --remove low rain \
+  --output outputs/selective/remove_low_rain
+```
+
+The command validates that every requested factor occurs in `--source-prompt`.
+If `--input` is omitted, it reads
+`data/half_test/main_data/<source-prompt>`.
+
+#### Identity inference: `inference_identity.py`
+
+Use this command to inspect the model output under the learned identity
+condition. No degradation prompt is encoded; the all-ones identity embedding
+is passed to the restorer. This is useful for checking how well the model
+preserves its input when no restoration is requested.
+
+```bash
+python inference_identity.py \
+  --source-prompt low_haze \
+  --output outputs/identity/low_haze
+```
+
+Here `--source-prompt` only selects the default input directory
+`data/half_test/main_data/low_haze`; it does not condition the model. For an
+arbitrary input, use `--input` instead:
+
+```bash
+python inference_identity.py \
+  --input path/to/image_or_folder \
+  --output outputs/identity/custom
+```
+
+#### Sequential two-stage restoration: `inference_twostage.py`
+
+Use this command to remove the two factors of a composite degradation in two
+successive model passes. It saves the intermediate image after the first pass
+and the final image after the second pass.
+
+```bash
+python inference_twostage.py \
+  --source-prompt low_haze \
+  --sequence low haze \
+  --output outputs/twostage/low_haze
+```
+
+For `--source-prompt low_haze`, omit `--sequence` to use `low haze`, or pass
+`--sequence haze low` to test the reverse order. The sequence must contain both
+source factors exactly once. Outputs are stored as:
+
+```text
+outputs/twostage/low_haze/
+├── stage1_low/                # low removed first
+└── stage2_low_then_haze/      # haze removed from the stage-1 result
+```
+
+If `--input` is omitted, the input defaults to
+`data/half_test/main_data/<source-prompt>`.
 
 ## Training
 
