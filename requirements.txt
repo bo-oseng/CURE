@@ -11,3 +11,5 @@ thop
 fasttext
 opencv-python
 matplotlib
+gradio==5.38.0
+huggingface_hub>=0.33,<2

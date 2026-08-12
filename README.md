@@ -80,6 +80,39 @@ The same files are also available from this
 Hugging Face is the recommended source because it provides versioned model
 hosting and more reliable command-line downloads.
 
+## Gradio demo and Hugging Face Spaces
+
+The Gradio app exposes all five controllable inference modes as separate tabs:
+one-step, ratio, selective, identity, and two-stage restoration. It uses local
+checkpoints when they exist and otherwise downloads the released weights from
+`ses7720/CURE` into the Hugging Face cache.
+
+Run it locally with:
+
+```bash
+python app.py
+```
+
+By default, the app uses CUDA when available, processes one request at a time,
+and limits the longest image side to 1024 pixels. These settings can be
+overridden with `CURE_DEVICE` and `CURE_MAX_IMAGE_SIDE`.
+
+To publish the minimal app to a dedicated Gradio Space, first log in with a
+Hugging Face write token and then run the deployment helper:
+
+```bash
+hf auth login
+python tools/deploy_space.py --repo-id ses7720/CURE-Demo
+```
+
+The helper uploads only `app.py`, the required `cure` inference modules, and
+the files under `hf_space/`. It does not upload the local `checkpoints/`,
+dataset, training code, or project-page assets. The Space metadata preloads
+`CURE_restorer.tar` and `OneRestore_embedder.tar` from the public model
+repository. After publishing, select a GPU in the Space **Settings > Hardware**
+page; `T4 small` is the suggested starting point. Merely declaring
+`suggested_hardware` in the Space README does not allocate a GPU.
+
 ## Inference
 
 Place the CURE restorer and OneRestore embedder weights in `checkpoints/` as
