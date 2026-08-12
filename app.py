@@ -297,6 +297,42 @@ def _example_picker(
     )
 
 
+def _selective_example_picker(
+    image_input: gr.Image,
+    source_input: gr.Dropdown,
+    factors_input: gr.CheckboxGroup,
+) -> gr.Examples:
+    available = tuple(prompt for prompt in COMPOSITE_PROMPTS if _example_path(prompt))
+    return gr.Examples(
+        examples=[
+            [_example_path(prompt), prompt, [prompt.split("_")[-1]]] for prompt in available
+        ],
+        inputs=[image_input, source_input, factors_input],
+        example_labels=[prompt.replace("_", " + ") for prompt in available],
+        examples_per_page=len(available),
+        label="CCDD-11 sample images · click to use",
+        show_api=False,
+    )
+
+
+def _twostage_example_picker(
+    image_input: gr.Image,
+    source_input: gr.Dropdown,
+    order_input: gr.Radio,
+) -> gr.Examples:
+    available = tuple(prompt for prompt in TWO_FACTOR_PROMPTS if _example_path(prompt))
+    return gr.Examples(
+        examples=[
+            [_example_path(prompt), prompt, _order_choices(prompt)[0]] for prompt in available
+        ],
+        inputs=[image_input, source_input, order_input],
+        example_labels=[prompt.replace("_", " + ") for prompt in available],
+        examples_per_page=len(available),
+        label="CCDD-11 sample images · click to use",
+        show_api=False,
+    )
+
+
 def build_demo() -> gr.Blocks:
     with gr.Blocks(title="CURE · Controllable Image Restoration") as interface:
         gr.Markdown(
@@ -368,7 +404,7 @@ def build_demo() -> gr.Blocks:
                     label="Known source degradation",
                 )
                 selective_factors = gr.CheckboxGroup(
-                    ["low", "haze"],
+                    ["low", "haze", "rain", "snow"],
                     value=["haze"],
                     label="Factors to remove",
                 )
@@ -378,7 +414,11 @@ def build_demo() -> gr.Blocks:
                 selective_factors,
             )
             selective_button = gr.Button("Remove selected factors", variant="primary")
-            _example_picker(selective_input, selective_source, COMPOSITE_PROMPTS)
+            _selective_example_picker(
+                selective_input,
+                selective_source,
+                selective_factors,
+            )
             selective_status = gr.Textbox(label="Run information", interactive=False)
             selective_button.click(
                 run_selective,
@@ -417,8 +457,11 @@ def build_demo() -> gr.Blocks:
                     label="Two-factor source degradation",
                 )
                 initial_orders = _order_choices("low_haze")
+                all_orders = tuple(
+                    order for prompt in TWO_FACTOR_PROMPTS for order in _order_choices(prompt)
+                )
                 twostage_order = gr.Radio(
-                    initial_orders,
+                    all_orders,
                     value=initial_orders[0],
                     label="Removal order",
                 )
@@ -428,7 +471,11 @@ def build_demo() -> gr.Blocks:
                 twostage_order,
             )
             twostage_button = gr.Button("Run two stages", variant="primary")
-            _example_picker(twostage_input, twostage_source, TWO_FACTOR_PROMPTS)
+            _twostage_example_picker(
+                twostage_input,
+                twostage_source,
+                twostage_order,
+            )
             twostage_status = gr.Textbox(label="Run information", interactive=False)
             twostage_button.click(
                 run_twostage,
