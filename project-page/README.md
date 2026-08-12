@@ -38,12 +38,16 @@ Update those values if the final repository name or domain changes.
 - `static/images/qualitative/`: representative CCDD-11 results
 - `static/images/results/figure-02.jpg`: full Figure 2 qualitative comparison extracted at 300 dpi
 - `static/images/method/`: CURE overview figure
-- `static/images/supplement/`: optimized supplementary assets; Figures 5–19 are presented in the page explorer
+- `static/images/supplement/`: optimized supplementary assets; Figures 5–16 are presented in the page explorer
 - `static/pdfs/CURE.pdf`: local paper PDF
 
 The interactive ratio demo intentionally uses the eight values visualized in the paper. Replace or extend these files when `w = 0.0, 0.1, 1.0` outputs are available.
 
-The supplementary explorer groups fifteen figures into Identity Preservation, Ratio Control, Selective Control, Order Dependency, and Restoration Quality. Contextual buttons in the main narrative open the corresponding group and figure. Figure 4 (real-world restoration) is intentionally omitted from the page.
+The supplementary explorer groups twelve figures into Identity Preservation,
+Ratio Control, Selective Control, and Order Dependency. Contextual buttons in
+the main narrative open the corresponding group and figure. Figure 4
+(real-world restoration) and Figures 17–19 are intentionally omitted from the
+page.
 
 ## Credits
 

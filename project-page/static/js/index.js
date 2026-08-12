@@ -176,33 +176,6 @@
       caption: "Order-invariant behavior carries over from weather corruptions to mixed digital artifacts.",
       tags: ["Order invariance", "Blur + JPEG"],
       alt: "Supplementary restoration-order study for blur and JPEG artifacts"
-    },
-    {
-      number: 17,
-      category: "quality",
-      categoryLabel: "Restoration quality",
-      title: "Additional Haze + Snow results",
-      caption: "Side-by-side qualitative comparisons highlight CURE's restoration quality on a double-degradation case.",
-      tags: ["Qualitative comparison", "Haze + Snow"],
-      alt: "Supplementary OneRestore and CURE comparison on haze and snow"
-    },
-    {
-      number: 18,
-      category: "quality",
-      categoryLabel: "Restoration quality",
-      title: "Additional triple-degradation results",
-      caption: "CURE restores Low + Haze + Snow composites while retaining finer structure in challenging regions.",
-      tags: ["Qualitative comparison", "Low + Haze + Snow"],
-      alt: "Supplementary OneRestore and CURE comparison on a triple degradation"
-    },
-    {
-      number: 19,
-      category: "quality",
-      categoryLabel: "Restoration quality",
-      title: "Additional blur results",
-      caption: "The final supplementary comparison shows restoration quality on blur beyond the weather-degradation cases.",
-      tags: ["Qualitative comparison", "Blur"],
-      alt: "Supplementary OneRestore and CURE comparison on blur"
     }
   ].map(function (figure) {
     figure.src = "static/images/supplement/figure-" + String(figure.number).padStart(2, "0") + ".jpg";
@@ -371,6 +344,7 @@
     const counter = document.getElementById("supp-counter");
     const figureNumber = document.getElementById("supp-figure-number");
     const title = document.getElementById("supp-title");
+    const figcaptionLabel = document.getElementById("supp-figcaption-label");
     const caption = document.getElementById("supp-caption");
     const tags = document.getElementById("supp-tags");
     const previousButton = document.getElementById("supp-prev");
@@ -456,6 +430,7 @@
       counter.textContent = String(index + 1) + " / " + String(group.length);
       figureNumber.textContent = "Supplementary Figure " + figure.number;
       title.textContent = figure.title;
+      figcaptionLabel.textContent = "Supplementary Figure " + figure.number + ". " + figure.title + ".";
       caption.textContent = figure.caption;
       tags.textContent = "";
       figure.tags.forEach(function (tag) {

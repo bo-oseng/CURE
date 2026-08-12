@@ -1483,7 +1483,7 @@ tbody tr:last-child td {
 .supp-category-tabs {
   margin-bottom: 18px;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 8px;
 }
 
@@ -1546,7 +1546,7 @@ tbody tr:last-child td {
 
 .supp-explorer {
   display: grid;
-  grid-template-columns: minmax(285px, 0.72fr) minmax(0, 1.48fr);
+  grid-template-columns: minmax(0, 1fr);
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -1556,16 +1556,24 @@ tbody tr:last-child td {
 
 .supp-info {
   min-width: 0;
-  padding: 38px 34px;
-  display: flex;
-  flex-direction: column;
+  padding: 28px 30px;
+  display: grid;
+  grid-template-columns: minmax(230px, 0.8fr) minmax(320px, 1.25fr) auto;
+  gap: 30px;
+  align-items: center;
   background: #fff;
-  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.supp-info-heading,
+.supp-info-copy {
+  min-width: 0;
 }
 
 .supp-meta-row {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: flex-start;
   gap: 16px;
   color: var(--forest);
   font-size: 0.68rem;
@@ -1575,35 +1583,38 @@ tbody tr:last-child td {
 }
 
 .supp-meta-row span:last-child {
+  padding-left: 16px;
   color: #96a69f;
+  border-left: 1px solid var(--line);
 }
 
 .supp-figure-number {
-  margin-top: 74px;
+  margin-top: 23px;
+  display: block;
   color: var(--muted);
   font-size: 0.72rem;
   font-weight: 700;
 }
 
-.supp-info h3 {
+.supp-info-heading h3 {
   margin: 9px 0 0;
   color: var(--ink);
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 2.7vw, 2.3rem);
+  font-size: clamp(1.45rem, 2.3vw, 2rem);
   font-weight: 750;
   letter-spacing: -0.045em;
   line-height: 1.12;
 }
 
-.supp-info > p {
-  margin: 17px 0 0;
+.supp-info-copy > p {
+  margin: 0;
   color: var(--muted);
   font-size: 0.9rem;
   line-height: 1.68;
 }
 
 .supp-tags {
-  margin-top: 22px;
+  margin-top: 0;
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
@@ -1620,8 +1631,8 @@ tbody tr:last-child td {
 }
 
 .supp-actions {
-  margin-top: auto;
-  padding-top: 40px;
+  margin: 0;
+  padding: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1668,8 +1679,8 @@ tbody tr:last-child td {
 .supp-stage {
   min-width: 0;
   margin: 0;
-  padding: 20px 20px 13px;
-  background: #10211b;
+  padding: 20px;
+  background: #fff;
   transition: opacity 0.14s ease;
 }
 
@@ -1680,29 +1691,36 @@ tbody tr:last-child td {
 .supp-image-button {
   position: relative;
   width: 100%;
-  max-height: 690px;
+  height: min(72vh, 760px);
+  min-height: 560px;
   padding: 0;
-  display: block;
-  overflow: auto;
-  background: #080e0c;
-  border: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e3e9e5;
   border-radius: 14px;
   cursor: zoom-in;
 }
 
 .supp-image-button img {
-  width: 100%;
-  height: auto;
+  position: relative;
+  z-index: 1;
+  width: auto;
+  max-width: 100%;
+  height: 100%;
+  object-fit: contain;
+  box-shadow: 0 8px 32px rgba(18, 42, 33, 0.12);
 }
 
 .supp-image-button > span {
-  position: sticky;
+  position: absolute;
+  z-index: 2;
   right: 15px;
   bottom: 15px;
-  float: right;
   width: 38px;
   height: 38px;
-  margin: -54px 15px 15px 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1714,25 +1732,41 @@ tbody tr:last-child td {
 }
 
 .supp-stage figcaption {
-  padding: 11px 2px 0;
-  color: rgba(255, 255, 255, 0.46);
-  font-size: 0.68rem;
-  text-align: center;
+  padding: 17px 4px 3px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.supp-stage figcaption strong {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
+.supp-stage figcaption p {
+  margin: 3px 0 0;
 }
 
 .supp-filmstrip {
-  margin-top: 14px;
-  padding: 2px 1px 15px;
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+  padding: 18px 1px 3px;
   display: flex;
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
   gap: 9px;
-  overflow-x: auto;
-  scroll-snap-type: x proximity;
-  scrollbar-color: #b5c3bd transparent;
+  overflow-x: hidden;
+  border-top: 1px solid var(--line);
 }
 
 .supp-thumb {
-  width: 190px;
-  flex: 0 0 190px;
+  width: 100%;
+  min-width: 0;
+  max-width: 172px;
+  flex: 1 1 140px;
   padding: 7px;
   color: var(--ink-soft);
   background: rgba(255, 255, 255, 0.76);
@@ -1740,14 +1774,13 @@ tbody tr:last-child td {
   border-radius: 13px;
   cursor: pointer;
   overflow: hidden;
-  scroll-snap-align: start;
   text-align: left;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .supp-thumb img {
   width: 100%;
-  height: 92px;
+  height: 78px;
   object-fit: cover;
   object-position: top;
   background: #0c1512;
@@ -1793,7 +1826,7 @@ tbody tr:last-child td {
 }
 
 .supp-source-note {
-  margin: 4px 0 0;
+  margin: 12px 0 0;
   color: #82928b;
   font-size: 0.69rem;
 }
@@ -2261,7 +2294,7 @@ footer {
   }
 
   .supp-category-tabs {
-    grid-template-columns: repeat(5, minmax(150px, 1fr));
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
     padding-bottom: 10px;
     overflow-x: auto;
     scroll-snap-type: x proximity;
@@ -2272,11 +2305,18 @@ footer {
   }
 
   .supp-explorer {
-    grid-template-columns: minmax(260px, 0.68fr) minmax(0, 1.32fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .supp-info {
     padding: 30px 26px;
+    grid-template-columns: minmax(220px, 0.8fr) minmax(280px, 1.2fr);
+    gap: 24px 30px;
+  }
+
+  .supp-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
   }
 }
 
@@ -2384,16 +2424,18 @@ footer {
   }
 
   .supp-info {
-    border-right: 0;
     border-bottom: 1px solid var(--line);
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
 
   .supp-figure-number {
-    margin-top: 36px;
+    margin-top: 23px;
   }
 
   .supp-image-button {
-    max-height: 620px;
+    height: min(72vh, 620px);
+    min-height: 460px;
   }
 
   .dataset-visual {
@@ -2505,7 +2547,8 @@ footer {
   }
 
   .supp-actions {
-    padding-top: 32px;
+    grid-column: auto;
+    padding-top: 4px;
   }
 
   .supp-stage {
@@ -2534,7 +2577,8 @@ footer {
   }
 
   .supp-image-button {
-    max-height: 500px;
+    height: min(68vh, 500px);
+    min-height: 380px;
   }
 
   .supp-lightbox {

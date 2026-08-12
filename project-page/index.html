@@ -43,10 +43,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="static/css/bulma.min.css">
-  <link rel="stylesheet" href="static/css/index.css">
+  <link rel="stylesheet" href="static/css/index.css?v=20260812-1">
 
   <script defer src="static/js/fontawesome.all.min.js"></script>
-  <script defer src="static/js/index.js"></script>
+  <script defer src="static/js/index.js?v=20260812-1"></script>
 
   <script type="application/ld+json">
   {
@@ -437,7 +437,7 @@
             <div class="section-kicker"><span>06</span> Supplementary evidence</div>
             <h2>Every control, under a closer lens.</h2>
           </div>
-          <p>Explore fifteen supplementary figures by experiment family. Open any figure for a full-resolution inspection.</p>
+          <p>Explore twelve supplementary figures by experiment family. Open any figure for a full-resolution inspection.</p>
         </div>
 
         <div class="supp-category-tabs" role="tablist" aria-label="Supplementary experiment categories">
@@ -453,22 +453,22 @@
           <button type="button" role="tab" data-supp-category="order" aria-selected="false">
             <span>04</span><strong>Order dependency</strong><small>Figures 14–16</small>
           </button>
-          <button type="button" role="tab" data-supp-category="quality" aria-selected="false">
-            <span>05</span><strong>Restoration quality</strong><small>Figures 17–19</small>
-          </button>
         </div>
 
         <div class="supp-explorer">
           <aside class="supp-info" aria-live="polite">
-            <div class="supp-meta-row">
-              <span id="supp-category-label">Identity preservation</span>
-              <span id="supp-counter">1 / 2</span>
+            <div class="supp-info-heading">
+              <div class="supp-meta-row">
+                <span id="supp-category-label">Identity preservation</span>
+                <span id="supp-counter">1 / 2</span>
+              </div>
+              <span class="supp-figure-number" id="supp-figure-number">Supplementary Figure 5</span>
+              <h3 id="supp-title">Identity operation on snow</h3>
             </div>
-            <span class="supp-figure-number" id="supp-figure-number">Supplementary Figure 5</span>
-            <h3 id="supp-title">Identity operation on snow</h3>
-            <p id="supp-caption">When snow is meant to remain, the identity embedding preserves the degraded input instead of over-restoring it.</p>
-            <div class="supp-tags" id="supp-tags">
-              <span>Identity embedding</span><span>Snow preservation</span>
+            <div class="supp-info-copy">
+              <div class="supp-tags" id="supp-tags">
+                <span>Identity embedding</span><span>Snow preservation</span>
+              </div>
             </div>
             <div class="supp-actions">
               <div class="supp-stepper" aria-label="Navigate figures">
@@ -477,6 +477,7 @@
               </div>
               <button class="supp-open" id="supp-open" type="button"><i class="fas fa-expand-alt" aria-hidden="true"></i> Full-size</button>
             </div>
+            <div class="supp-filmstrip" id="supp-filmstrip" aria-label="Figures in the selected category" aria-live="off"></div>
           </aside>
 
           <figure class="supp-stage">
@@ -484,12 +485,14 @@
               <img id="supp-main-image" src="static/images/supplement/figure-05.jpg" alt="Supplementary identity-operation study on snow images">
               <span><i class="fas fa-search-plus" aria-hidden="true"></i></span>
             </button>
-            <figcaption>Click the figure to inspect it at full resolution.</figcaption>
+            <figcaption>
+              <strong id="supp-figcaption-label">Supplementary Figure 5. Identity operation on snow.</strong>
+              <p id="supp-caption">When snow is meant to remain, the identity embedding preserves the degraded input instead of over-restoring it.</p>
+            </figcaption>
           </figure>
         </div>
 
-        <div class="supp-filmstrip" id="supp-filmstrip" aria-label="Figures in the selected category"></div>
-        <p class="supp-source-note">Figures 5–19 from the paper supplementary material, grouped and loaded by experiment family.</p>
+        <p class="supp-source-note">Figures 5–16 from the paper supplementary material, grouped and loaded by experiment family.</p>
       </div>
     </section>
 
