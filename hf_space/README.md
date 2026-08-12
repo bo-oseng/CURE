@@ -33,3 +33,7 @@ This Gradio Space exposes the five CURE inference modes:
 The model weights are loaded from [ses7720/CURE](https://huggingface.co/ses7720/CURE).
 The source code and command-line inference tools are available on
 [GitHub](https://github.com/bo-oseng/CURE).
+
+Each tab includes representative CCDD-11 sample images. The samples use the
+same scene with each of the 11 supported degradation combinations, making it
+easy to compare controls without uploading an image first.

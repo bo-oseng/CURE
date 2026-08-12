@@ -30,6 +30,7 @@ except ImportError:  # The package is injected by the ZeroGPU runtime on Spaces.
 MODEL_REPO = os.environ.get("CURE_MODEL_REPO", "ses7720/CURE")
 MODEL_REVISION = os.environ.get("CURE_MODEL_REVISION", "main")
 PROJECT_ROOT = Path(__file__).resolve().parent
+EXAMPLE_ROOT = PROJECT_ROOT / "examples"
 MAX_IMAGE_SIDE = max(64, int(os.environ.get("CURE_MAX_IMAGE_SIDE", "1024")))
 
 RESTORATION_PROMPTS = tuple(name for name in EMBEDDER_TYPES if name != "clear")
@@ -255,8 +256,14 @@ def run_twostage(
     )
 
 
-def _image_input() -> gr.Image:
+def _example_path(prompt: str) -> str:
+    path = EXAMPLE_ROOT / f"{prompt}.jpg"
+    return str(path) if path.is_file() else ""
+
+
+def _image_input(default_prompt: str = "low_haze") -> gr.Image:
     return gr.Image(
+        value=_example_path(default_prompt) or None,
         label="Input image",
         sources=["upload", "clipboard"],
         type="pil",
@@ -266,6 +273,28 @@ def _image_input() -> gr.Image:
 
 def _image_output(label: str) -> gr.Image:
     return gr.Image(label=label, type="pil", format="png", interactive=False)
+
+
+def _example_picker(
+    image_input: gr.Image,
+    prompt_input: gr.Dropdown | None = None,
+    prompts: Sequence[str] = RESTORATION_PROMPTS,
+) -> gr.Examples:
+    available = tuple(prompt for prompt in prompts if _example_path(prompt))
+    if prompt_input is None:
+        examples = [[_example_path(prompt)] for prompt in available]
+        inputs = [image_input]
+    else:
+        examples = [[_example_path(prompt), prompt] for prompt in available]
+        inputs = [image_input, prompt_input]
+    return gr.Examples(
+        examples=examples,
+        inputs=inputs,
+        example_labels=[prompt.replace("_", " + ") for prompt in available],
+        examples_per_page=len(available),
+        label="CCDD-11 sample images · click to use",
+        show_api=False,
+    )
 
 
 def build_demo() -> gr.Blocks:
@@ -290,6 +319,7 @@ def build_demo() -> gr.Blocks:
                 label="Degradation to remove",
             )
             main_button = gr.Button("Restore", variant="primary")
+            _example_picker(main_input, main_prompt)
             main_status = gr.Textbox(label="Run information", interactive=False)
             main_button.click(
                 run_main,
@@ -312,6 +342,7 @@ def build_demo() -> gr.Blocks:
                     label="Strengths (0 = identity, 1 = full)",
                 )
             ratio_button = gr.Button("Compare strengths", variant="primary")
+            _example_picker(ratio_input, ratio_prompt)
             ratio_gallery = gr.Gallery(
                 label="Ratio-controlled results",
                 columns=3,
@@ -347,6 +378,7 @@ def build_demo() -> gr.Blocks:
                 selective_factors,
             )
             selective_button = gr.Button("Remove selected factors", variant="primary")
+            _example_picker(selective_input, selective_source, COMPOSITE_PROMPTS)
             selective_status = gr.Textbox(label="Run information", interactive=False)
             selective_button.click(
                 run_selective,
@@ -364,6 +396,7 @@ def build_demo() -> gr.Blocks:
                 identity_input = _image_input()
                 identity_output = _image_output("Identity output")
             identity_button = gr.Button("Run identity", variant="primary")
+            _example_picker(identity_input)
             identity_status = gr.Textbox(label="Run information", interactive=False)
             identity_button.click(
                 run_identity,
@@ -395,6 +428,7 @@ def build_demo() -> gr.Blocks:
                 twostage_order,
             )
             twostage_button = gr.Button("Run two stages", variant="primary")
+            _example_picker(twostage_input, twostage_source, TWO_FACTOR_PROMPTS)
             twostage_status = gr.Textbox(label="Run information", interactive=False)
             twostage_button.click(
                 run_twostage,

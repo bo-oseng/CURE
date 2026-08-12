@@ -23,6 +23,12 @@ SPACE_FILES = {
     "cure/models/__init__.py": PROJECT_ROOT / "cure" / "models" / "__init__.py",
     "cure/models/onerestore.py": PROJECT_ROOT / "cure" / "models" / "onerestore.py",
 }
+SPACE_FILES.update(
+    {
+        f"examples/{path.name}": path
+        for path in sorted((PROJECT_ROOT / "examples").glob("*.jpg"))
+    }
+)
 
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:

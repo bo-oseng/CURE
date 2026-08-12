@@ -96,7 +96,9 @@ python app.py
 
 By default, the app uses CUDA when available, processes one request at a time,
 and limits the longest image side to 1024 pixels. These settings can be
-overridden with `CURE_DEVICE` and `CURE_MAX_IMAGE_SIDE`.
+overridden with `CURE_DEVICE` and `CURE_MAX_IMAGE_SIDE`. Each tab also includes
+clickable example images covering all 11 CCDD-11 degradation combinations, so
+the hosted demo can be tried without uploading an image.
 
 To publish the minimal app to a dedicated Gradio Space, first log in with a
 Hugging Face write token and then run the deployment helper:

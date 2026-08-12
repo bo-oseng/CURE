@@ -6,7 +6,7 @@ from tools.deploy_space import SPACE_FILES, deployment_operations
 
 
 def test_space_deployment_contains_only_runtime_files() -> None:
-    assert set(SPACE_FILES) == {
+    runtime_files = {
         "app.py",
         "README.md",
         "requirements.txt",
@@ -17,6 +17,8 @@ def test_space_deployment_contains_only_runtime_files() -> None:
         "cure/models/__init__.py",
         "cure/models/onerestore.py",
     }
+    example_files = {f"examples/{prompt}.jpg" for prompt in app.RESTORATION_PROMPTS}
+    assert set(SPACE_FILES) == runtime_files | example_files
     assert all(path.is_file() for path in SPACE_FILES.values())
     assert len(deployment_operations()) == len(SPACE_FILES)
 
@@ -37,6 +39,12 @@ def test_zerogpu_decorator_is_a_noop_outside_spaces() -> None:
 
     if app.hf_spaces is None:
         assert app.zerogpu(60)(function) is function
+
+
+def test_each_degradation_has_a_deployable_example() -> None:
+    assert len(app.RESTORATION_PROMPTS) == 11
+    for prompt in app.RESTORATION_PROMPTS:
+        assert app._example_path(prompt).endswith(f"examples/{prompt}.jpg")
 
 
 def test_image_preparation_limits_the_longest_side() -> None:
