@@ -327,6 +327,75 @@ outputs/twostage/low_haze/
 If `--input` is omitted, the input defaults to
 `data/half_test/main_data/<source-prompt>`.
 
+## Embedder evaluation
+
+Both evaluators load `checkpoints/OneRestore_embedder.tar` and
+`assets/glove.6B.300d.txt` by default. Use `--checkpoint`, `--glove`, and
+`--device` to override them.
+
+### Embedder classification: `eval_embedder.py`
+
+This command evaluates the visual branch of the embedder directly. The input
+must contain one directory per degradation class, as in
+`data/half_test/main_data/<class>/`. It reports overall and per-class top-1
+accuracy, cross-entropy loss, the predominant prediction, and the complete
+prediction distribution.
+
+```bash
+python eval_embedder.py
+```
+
+Evaluate selected classes or a small subset with:
+
+```bash
+python eval_embedder.py \
+  --input data/half_test/main_data \
+  --classes low haze low_haze \
+  --batch-size 128 \
+  --device cuda:0
+
+python eval_embedder.py --classes clear --max-images 10 --device cpu
+```
+
+Detailed metrics are written to
+`outputs/evaluation/embedder/metrics.json` by default. Change the destination
+with `--output`.
+
+### Ratio-control trend: `eval_ration_control.py`
+
+This command reclassifies images produced by `inference_ratio_control.py` and
+measures how their predicted degradation changes with restoration strength.
+Generate the inputs and evaluate them with:
+
+```bash
+bash bash/inference/inference_ratio_control.sh
+
+python eval_ration_control.py \
+  --input outputs/inference/ratio_control
+```
+
+The evaluator discovers `<prompt>/strength_<value>/` directories automatically
+and can restrict the evaluation to selected prompts and strengths:
+
+```bash
+python eval_ration_control.py \
+  --input outputs/inference/ratio_control \
+  --prompts haze low_haze \
+  --strengths 0 0.5 1 \
+  --device cuda:0
+```
+
+The output fields include source-degradation accuracy and probability, clear
+probability, loss, and the predominant predicted class. `target_accuracy`
+means that an output is still classified as its original degradation. With the
+current inference convention, strength `0` is identity and strength `1` is
+full restoration, so decreasing target probability and increasing clear
+probability indicate that the degradation is being removed. Results are saved
+as `metrics.json` and `metrics.csv` under
+`outputs/evaluation/ratio_control/`; use `--output-dir` to change this path.
+Historical `<prompt>_<percentage>` directories from the original notebook are
+also supported.
+
 ## Training
 
 The scripts use `torchrun`; set `GPUS` to the number of local GPU processes.
