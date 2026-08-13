@@ -50,7 +50,7 @@ python tools/prepare_h5.py cure
 
 The following additional command is only needed when retraining the
 OneRestore baseline from scratch. It creates `datasets_h5/half_og_train.h5`,
-which is consumed by `bash/02_train_OneRestore_baseline.sh`:
+which is consumed by `bash/trian/02_train_OneRestore_baseline.sh`:
 
 ```bash
 python tools/prepare_h5.py baseline
@@ -81,7 +81,7 @@ The same files are also available from this
 Hugging Face is the recommended source because it provides versioned model
 hosting and more reliable command-line downloads.
 
-## Gradio demo and Hugging Face Spaces
+## Gradio demo
 
 The Gradio app exposes all five controllable inference modes as separate tabs:
 one-step, ratio, selective, identity, and two-stage restoration. It uses local
@@ -99,35 +99,6 @@ and limits the longest image side to 1024 pixels. These settings can be
 overridden with `CURE_DEVICE` and `CURE_MAX_IMAGE_SIDE`. Each tab also includes
 clickable example images covering all 11 CCDD-11 degradation combinations, so
 the hosted demo can be tried without uploading an image.
-
-To publish the minimal app to a dedicated Gradio Space, first log in with a
-Hugging Face write token and then run the deployment helper:
-
-```bash
-hf auth login
-python tools/deploy_space.py --repo-id ses7720/CURE-Demo
-```
-
-The helper uploads only `app.py`, the required `cure` inference modules, and
-the files under `hf_space/`. It does not upload the local `checkpoints/`,
-dataset, training code, or project-page assets. The Space metadata preloads
-`CURE_restorer.tar` and `OneRestore_embedder.tar` from the public model
-repository. The deployment helper requests ZeroGPU by default, and the five
-inference functions request a GPU only while they are running. A free personal
-account must be in good standing and have an available ZeroGPU Space slot.
-
-Regular CPU Gradio Space creation now requires a paid Hugging Face plan. PRO,
-Team, or Enterprise users can choose it explicitly:
-
-```bash
-python tools/deploy_space.py \
-  --repo-id ses7720/CURE-Demo \
-  --hardware cpu-basic
-```
-
-A dedicated GPU can be selected later in the Space **Settings > Hardware**
-page. Dedicated hardware is billed while starting or running, so configure a
-sleep time or pause the Space when it is not needed.
 
 ## Inference
 
@@ -149,6 +120,49 @@ Pass `--checkpoint checkpoints/OneRestore_restorer.tar` to run the pretrained
 OneRestore baseline instead of CURE. Use `--device cuda:1` to select a GPU or
 `--device cpu` to force CPU inference. All commands accept common image formats
 such as PNG, JPEG, BMP, TIFF, and WebP.
+
+The shell wrappers under `bash/inference/` provide scenario defaults and keep
+all results in a consistent hierarchy. Run them from any directory:
+
+```bash
+bash bash/inference/inference_identity.sh
+bash bash/inference/inference_main.sh
+bash bash/inference/inference_ratio_control.sh
+bash bash/inference/inference_selective_control.sh
+bash bash/inference/inference_twostage.sh
+```
+
+Their default output layout is:
+
+```text
+outputs/inference/
+├── identity/clear/
+├── main/haze/
+├── ratio_control/haze/
+│   ├── strength_0/
+│   ├── ...
+│   └── strength_1/
+├── selective_control/low_haze/remove_haze/
+└── twostage/low_haze/
+    ├── stage1_low/
+    └── stage2_low_then_haze/
+```
+
+Set `OUTPUT_ROOT` to preserve this hierarchy under another root, or set
+`OUTPUT` to override one command's final output directory. `INPUT`, `PROMPT`,
+`SOURCE_PROMPT`, `REMOVE`, `SEQUENCE`, and `PYTHON` are also configurable. Any
+additional command-line arguments are forwarded to the Python script:
+
+```bash
+PROMPT=low_haze OUTPUT_ROOT=outputs/experiment_01 \
+  bash bash/inference/inference_ratio_control.sh --device cuda:1
+
+SOURCE_PROMPT=low_haze REMOVE=haze \
+  bash bash/inference/inference_selective_control.sh
+
+SOURCE_PROMPT=low_haze SEQUENCE="haze low" \
+  bash bash/inference/inference_twostage.sh
+```
 
 | Script | Purpose |
 | --- | --- |
@@ -318,9 +332,9 @@ If `--input` is omitted, the input defaults to
 The scripts use `torchrun`; set `GPUS` to the number of local GPU processes.
 
 ```bash
-GPUS=4 bash bash/01_train_OneRestore_embedder.sh
-GPUS=4 bash bash/02_train_OneRestore_baseline.sh
-GPUS=4 bash bash/03_train_CURE.sh
+GPUS=4 bash bash/trian/01_train_OneRestore_embedder.sh
+GPUS=4 bash bash/trian/02_train_OneRestore_baseline.sh
+GPUS=4 bash bash/trian/03_train_CURE.sh
 ```
 
 Run `python <script> --help` for all dataset, checkpoint, optimization, and
